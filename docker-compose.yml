@@ -10,3 +10,11 @@ services:
         ports:
             - "81:80"
         command: bash -c "composer update && apache2-foreground"
+    database:
+        image: postgres:12.1
+        environment:
+            POSTGRES_USER: "docker"
+            POSTGRES_PASSWORD: "docker"
+            POSTGRES_DB: "jwt_test"
+        ports:
+            - "6543:5432"
