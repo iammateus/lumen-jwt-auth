@@ -16,3 +16,11 @@ use Illuminate\Http\Response;
 $router->get('/healthcheck', function () use ($router) {
     return new Response(["The server is running"]);
 });
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+
+    $router->post('/user/register', 'UserController@register');
+    
+    $router->post('/auth/login', 'AuthController@login');
+ 
+ });
