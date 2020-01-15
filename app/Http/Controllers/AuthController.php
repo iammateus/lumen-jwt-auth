@@ -41,19 +41,20 @@ class AuthController extends Controller
     public function responseWithToken(User $user)
     {
 
-        $key = '6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp3s6v9y/B?E(H+MbQeThWmZq4t7w!z%C&F)J@NcRfUjXn2r5u8x/A?D(G-KaPdSgVkYp3s6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-JaNdRfUjXn2r5u8x/A?D(G+KbPeShVkYp3s6v9y$B&E)H@McQfTjWnZq4t7w!z%C*F-JaNdRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t6w9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq3t6w9z$C&F)J@McQfTjWnZr4u7x!A%D*G-KaPdSgUkXp2s5v8y/B?E(H+MbQeThWmYq3t6w9z$C&F)J@NcRfUjXn2r4u7x!A%D*G-KaPdSgVkYp3s6v8y/B?E(H+MbQeThWmZq4t7w!z$C&F)J@NcRfUjXn2r5u8x/A?D*G-KaPdSgVkYp3s6v9y$B&E)H+MbQeThWmZq4';
+        $privateKey = file_get_contents("/var/www/html/private.key");
+
+        $publicKey = file_get_contents("/var/www/html/public.key");
 
         $payload = array(
             "iss" => "intercambiopravaler.com.br",
-            "aud" => "example.com",
-            "iat" => 1356999524,
-            "nbf" => 1357000000,
-            "userId" => $user->id
+            "aud" => "intercambiopravaler.com.br",
+            "iat" => time(),
+            "exp" => time() + 60 * 60 * 24 * 365 * 1000,
         );
         
-        $jwt = JWT::encode($payload, $key, 'HS512');
+        $jwt = JWT::encode($payload, $privateKey, 'RS512');
 
-        // $decoded = JWT::decode($jwt, $key, array('HS512'));
+        $decoded = JWT::decode($jwt, $publicKey, array('RS512'));
         
         return response()->json([ "data" => [ "token" => print_r($jwt, true) ] ]);
 
