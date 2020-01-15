@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Utils\Token;
 use Firebase\JWT\JWT;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -11,12 +13,12 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
-     * Return a auth token.
+     * Authenticates user by email and password and returns a token
      *
      * @param  Request  $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function login(Request $request)
+    public function authenticate(Request $request): JsonResponse
     {
         $this->validate($request, [
             'email' => 'required|string',
@@ -35,29 +37,18 @@ class AuthController extends Controller
             return response()->json(["message" => "Email or password incorrect"], Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->responseWithToken($user);
+        return $this->respondWithToken(Token::createUserToken($user));
     }
 
-    public function responseWithToken(User $user)
+    /**
+     * @param string $token
+     * @return JsonResponse
+     */
+    public function respondWithToken(string $token): JsonResponse
     {
-
-        $privateKey = file_get_contents("/var/www/html/private.key");
-
-        $publicKey = file_get_contents("/var/www/html/public.key");
-
-        $payload = array(
-            "iss" => "intercambiopravaler.com.br",
-            "aud" => "intercambiopravaler.com.br",
-            "iat" => time(),
-            "exp" => time() + 60 * 60 * 24 * 365 * 1000,
-        );
-        
-        $jwt = JWT::encode($payload, $privateKey, 'RS512');
-
-        $decoded = JWT::decode($jwt, $publicKey, array('RS512'));
-        
-        return response()->json([ "data" => [ "token" => print_r($jwt, true) ] ]);
-
+        return response()->json([
+            'access_token' => $token
+        ]);
     }
 
 }
