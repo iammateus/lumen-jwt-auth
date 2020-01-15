@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
-     * Store a new user.
+     * Stores a new user.
      *
      * @param  Request  $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         //validate incoming request 
         $this->validate($request, [

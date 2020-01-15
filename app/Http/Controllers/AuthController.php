@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Utils\Token;
-use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -37,7 +36,20 @@ class AuthController extends Controller
             return response()->json(["message" => "Email or password incorrect"], Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->respondWithToken(Token::createUserToken($user));
+        return $this->respondWithToken(Token::create($user));
+    }
+
+    /**
+     * Shows authenticated user's info
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function me(Request $request): JsonResponse
+    {
+        $user = User::find($request->user_id);
+
+        return response()->json(["user" => $user]);
     }
 
     /**
@@ -50,5 +62,4 @@ class AuthController extends Controller
             'access_token' => $token
         ]);
     }
-
 }

@@ -20,7 +20,11 @@ $router->get('/healthcheck', function () use ($router) {
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('/user/register', 'UserController@register');
-    
     $router->post('/auth/authenticate', 'AuthController@authenticate');
+   
+    
+    $router->group(["middleware" => "auth"], function () use ($router){
+        $router->put('/auth/me', 'AuthController@me');
+    });
 
- });
+});
