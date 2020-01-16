@@ -3,7 +3,7 @@
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
-class Healthcheck extends TestCase
+class HealthcheckTest extends TestCase
 {
     /**
      * A basic test example.
