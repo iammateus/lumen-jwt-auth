@@ -23,7 +23,17 @@ class UserTest extends TestCase
             ]
         );
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(201);
+        $this->seeJson(["message" => "CREATED"]);
+        $this->seeJsonStructure([
+            "user" => [
+                "id",
+                "name",
+                "email",
+                "created_at",
+                "updated_at"
+            ]
+        ]);
     }
 
     public function testUserRegistrationWithoutSendingName()
