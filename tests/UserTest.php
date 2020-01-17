@@ -87,7 +87,7 @@ class UserTest extends TestCase
         $this->seeJson(["error" => "The email must be a valid email address."]);
     }
 
-    public function testUserRegistrationWithAUsedEmail()
+    public function testUserRegistrationWithAnUsedEmail()
     {
         $user = factory(App\User::class)->make();
         $user->save();
