@@ -10,7 +10,7 @@ class HealthcheckTest extends TestCase
      *
      * @return void
      */
-    public function testStatusCode()
+    public function testHealthcheck()
     {
         $this->get('/healthcheck');
         $this->assertResponseOk();

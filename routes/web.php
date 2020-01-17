@@ -17,6 +17,12 @@ $router->get('/healthcheck', function () use ($router) {
     return new Response(["The server is running"]);
 });
 
-$router->group(["prefix" => "api"], function () use ($router){
+$router->group(["prefix" => "api"], function () use ($router) {
+    
     $router->post("user", "UserController@store");
+
+    $router->group(["middleware" => "auth"], function () use ($router) {
+        $router->post("auth/test", "AuthController@test");
+    });
+
 });

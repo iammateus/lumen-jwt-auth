@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
 
-class ExampleMiddleware
+class AuthMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +17,10 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
+        if( is_null( $request->bearerToken() ) ){
+            return response()->json(["message" => "UNAUTHORIZED"], Response::HTTP_UNAUTHORIZED);
+        }
+
         return $next($request);
     }
 }
