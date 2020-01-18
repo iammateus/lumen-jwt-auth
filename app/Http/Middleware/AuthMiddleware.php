@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
+use Utils\JWT;
 use Illuminate\Http\Response;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -17,10 +19,22 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if( is_null( $request->bearerToken() ) ){
-            return response()->json(["message" => "UNAUTHORIZED"], Response::HTTP_UNAUTHORIZED);
+        $bearerToken = $request->bearerToken();
+        
+        if( is_null( $bearerToken ) ){
+            return response()->json(["error" => "Bearer token is missing."], Response::HTTP_UNAUTHORIZED);
+        }
+
+        try
+        {
+            $jwt = JWT::decode($bearerToken);
+        }catch(Exception $error)
+        {
+            return response()->json(["error" => "Bearer token is invalid."], Response::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);
+
     }
+
 }
