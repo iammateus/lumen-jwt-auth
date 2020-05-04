@@ -1,1 +1,1 @@
-# TestLumenJWT
+# lumen-jwt-auth
